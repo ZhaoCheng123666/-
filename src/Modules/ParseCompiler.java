@@ -19,9 +19,25 @@ public class ParseCompiler {
     public static String myGetIden(int position){
         return savedWords.words.get(position).identifier;
     }
+    public static void getNext(){
+        position++;
+        if(savedWords.words.size()==position){
+            savedWords.words.add(SymbolCompiler.getSym());
+        }
+        token = savedWords.words.get(position);
+    }
+    public static void retract(int step){
+        position -= step;
+    }
     public static void filePrint() throws IOException {
         writer.write(myGetIden(position) + " " + myGet(position) + "\n");
         System.out.println(myGetIden(position) + " " + myGet(position));
+    }
+    public static void myPrint(int startPos, int endPos) throws IOException {
+        for(int i = startPos;i<=endPos;i++){
+            writer.write(myGetIden(i) + " " + myGet(i) + "\n");
+            System.out.println(myGetIden(i) + " " + myGet(i));
+        }
     }
     public static void CompUnit() throws IOException {
         while(true){
@@ -43,19 +59,15 @@ public class ParseCompiler {
     }
     public static int MainFuncDef() throws IOException {
         if(myGet(position).equals("int")){
-            filePrint();
             position++;
         }else return 0;
         if(myGet(position).equals("main")){
-            filePrint();
             position++;
         }else return 0;
         if(myGet(position).equals("(")){
-            filePrint();
             position++;
         }else return 0;
         if(myGet(position).equals(")")){
-            filePrint();
             position++;
         }else return 0;
         if(Block()==1){
@@ -65,12 +77,12 @@ public class ParseCompiler {
         }else return 0;
     }
     public static int Block() throws IOException {
+        int startPos = position;
         if(myGet(position).equals("{")){
-            filePrint();
             position++;
         }else return 0;
         if(myGet(position).equals("}")){
-            filePrint();
+            myPrint(startPos, position);
             writer.write("<Block>\n");
             System.out.println("<Block>");
             position++;
