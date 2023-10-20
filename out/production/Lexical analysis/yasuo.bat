@@ -1,0 +1,1 @@
+winrar a -r 2.zip *
